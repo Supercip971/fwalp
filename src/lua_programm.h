@@ -22,6 +22,7 @@ void programm_start_call(LuaProgramm* programm, const char* name);
 void programm_end_call(LuaProgramm* programm);
 
 void programm_do_call(LuaProgramm* programm, int return_count);
+
 #define programm_call_arg(programm, arg) \
   _Generic(arg,\
       int: lua_pushinteger, \

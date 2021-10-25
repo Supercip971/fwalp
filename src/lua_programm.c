@@ -37,7 +37,7 @@ void programm_do_call(LuaProgramm* programm, int return_count)
 {
     if(return_count != 0)
     {
-        printf("non 0 return are not  supported ! \n");
+        printf("non 0 return are not supported ! \n");
     }
 
     if(lua_pcall(programm->state, programm->_current_call_arg_count, return_count, 0) != LUA_OK)

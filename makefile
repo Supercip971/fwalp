@@ -21,7 +21,7 @@ OUTPUT = build/$(PROJECT_NAME).elf
 $(OUTPUT): $(OFILES)
 	@$(MKCWD)
 	@echo " LD [ $@ ] $<"
-	@$(CC) -o $@ $^ $(CFLAGS) -llua
+	@$(CC)  -llua -lSDL2 -lX11 -o $@ $^ $(CFLAGS)
 
 $(BUILD_DIR)/%.o: src/%.c 
 	@$(MKCWD)
