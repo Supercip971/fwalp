@@ -33,6 +33,10 @@ run: $(OUTPUT)
 
 all: $(OUTPUT)
 
+screen: $(OUTPUT)
+	Xephyr -br -noreset -screen "1024x640" :1&
+	DISPLAY=:1.0 $(OUTPUT) ./samples/hello.lua 
+
 clean:
 	@rm -rf build/
 

@@ -1,7 +1,7 @@
-#ifndef RECT_H 
-#define RECT_H 
+#ifndef RECT_H
+#define RECT_H
 
-typedef struct 
+typedef struct
 {
     int x;
     int y;
