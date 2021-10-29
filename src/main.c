@@ -24,7 +24,7 @@ int main(int argc, char **argv)
 
         render_flip(renderer);
     }
-    LuaProgramm *programm = load_programm(argv[1]);
+    LuaProgram *programm = load_programm(argv[1]);
 
     programm_start_call(programm, "update");
     programm_call_arg(programm, 1.f);

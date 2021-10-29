@@ -1,9 +1,9 @@
-#include "lua_programm.h"
+#include "lua_program.h"
 #include <stdlib.h>
 
-LuaProgramm *programm_init(void)
+LuaProgram *programm_init(void)
 {
-    LuaProgramm *self = malloc(sizeof(LuaProgramm));
+    LuaProgram *self = malloc(sizeof(LuaProgram));
 
     self->state = luaL_newstate();
 
@@ -12,28 +12,28 @@ LuaProgramm *programm_init(void)
     return self;
 }
 
-void programm_deinit(LuaProgramm *programm)
+void programm_deinit(LuaProgram *programm)
 {
     lua_close(programm->state);
 }
 
-const char *get_error(LuaProgramm *programm)
+const char *get_error(LuaProgram *programm)
 {
     return lua_tostring(programm->state, -1);
 }
 
-void programm_start_call(LuaProgramm *programm, const char *name)
+void programm_start_call(LuaProgram *programm, const char *name)
 {
     programm->_current_call_arg_count = 0;
     lua_getglobal(programm->state, name);
 }
 
-void programm_end_call(LuaProgramm *programm)
+void programm_end_call(LuaProgram *programm)
 {
     lua_pop(programm->state, lua_gettop(programm->state));
 }
 
-void programm_do_call(LuaProgramm *programm, int return_count)
+void programm_do_call(LuaProgram *programm, int return_count)
 {
     if (return_count != 0)
     {

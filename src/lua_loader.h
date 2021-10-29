@@ -1,10 +1,10 @@
 #ifndef LUA_LOADER_H
 #define LUA_LOADER_H
 
-#include "lua_programm.h"
+#include "lua_program.h"
 
-LuaProgramm *load_programm(const char *path);
+LuaProgram *load_programm(const char *path);
 
-void unload_programm(LuaProgramm *programm);
+void unload_programm(LuaProgram *programm);
 
 #endif

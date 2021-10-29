@@ -1,9 +1,9 @@
 #include "lua_loader.h"
 #include <stdlib.h>
 
-LuaProgramm *load_programm(const char *path)
+LuaProgram *load_programm(const char *path)
 {
-    LuaProgramm *programm = programm_init();
+    LuaProgram *programm = programm_init();
 
     if (luaL_dofile(programm->state, path) != LUA_OK)
     {
@@ -18,7 +18,7 @@ LuaProgramm *load_programm(const char *path)
     return programm;
 }
 
-void unload_programm(LuaProgramm *programm)
+void unload_programm(LuaProgram *programm)
 {
     programm_deinit(programm);
 }

@@ -9,19 +9,19 @@ typedef struct
 {
     lua_State *state;
     int _current_call_arg_count;
-} LuaProgramm;
+} LuaProgram;
 
-LuaProgramm *programm_init(void);
+LuaProgram *programm_init(void);
 
-void programm_deinit(LuaProgramm *programm);
+void programm_deinit(LuaProgram *programm);
 
-const char *get_error(LuaProgramm *programm);
+const char *get_error(LuaProgram *programm);
 
-void programm_start_call(LuaProgramm *programm, const char *name);
+void programm_start_call(LuaProgram *programm, const char *name);
 
-void programm_end_call(LuaProgramm *programm);
+void programm_end_call(LuaProgram *programm);
 
-void programm_do_call(LuaProgramm *programm, int return_count);
+void programm_do_call(LuaProgram *programm, int return_count);
 
 #define programm_call_arg(programm, arg)              \
     _Generic(arg,                                     \
