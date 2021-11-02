@@ -63,11 +63,17 @@ static int draw_rec(lua_State *L)
     render_rect(target_renderer, (Rect){x, y, w, h}, last_color);
     return 0;
 }
+static int fill(lua_State *L)
+{
+    render_fill(target_renderer, last_color);
+    return 0;
+}
 
 static const luaL_Reg fwalp_render[] =
     {
         {"draw_rec", draw_rec},
         {"set_color", set_color},
+        {"fill", fill},
         {NULL, NULL},
 };
 
