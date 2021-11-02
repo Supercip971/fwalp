@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include "fwalp_lib.h"
 #include "lua_loader.h"
 #include "render.h"
 int main(int argc, char **argv)
@@ -16,23 +17,21 @@ int main(int argc, char **argv)
     conf.width = 100;
     conf.screen_id = NULL;
     FWalpRenderer *renderer = render_init(&conf);
-
+    LuaProgram *programm = load_programm(argv[1]);
+    set_program_render_target(renderer);
+    float time = 0.0f;
     while (render_update(renderer))
     {
-        printf("render: \n");
-        render_rect(renderer, (Rect){.x = 100, .y = 100, .w = 500, .h = 500}, (Color){.raw = 0xffffffff});
+        programm_start_call(programm, "update");
+        programm_call_arg(programm, time);
+
+        programm_do_call(programm, 0);
+
+        programm_end_call(programm);
 
         render_flip(renderer);
+        time += 0.1f;
     }
-    LuaProgram *programm = load_programm(argv[1]);
-
-    programm_start_call(programm, "update");
-    programm_call_arg(programm, 1.f);
-
-    programm_do_call(programm, 0);
-
-    programm_end_call(programm);
-
     unload_programm(programm);
 
     free(programm);

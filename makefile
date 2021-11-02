@@ -29,7 +29,7 @@ $(BUILD_DIR)/%.o: src/%.c
 	@$(CC) $(CFLAGS) -MMD -MP $< -c -o $@ 
 
 run: $(OUTPUT)
-	@$(OUTPUT)
+	@$(OUTPUT) ./samples/hello.lua
 
 all: $(OUTPUT)
 

@@ -1,5 +1,7 @@
 #include "lua_program.h"
 #include <stdlib.h>
+#include "fwalp_lib.h"
+
 
 LuaProgram *programm_init(void)
 {
@@ -9,9 +11,14 @@ LuaProgram *programm_init(void)
 
     luaL_openlibs(self->state);
 
+
     return self;
 }
 
+void program_load_libs(LuaProgram* program)
+{
+    load_fwalp_lib(program);
+}
 void programm_deinit(LuaProgram *programm)
 {
     lua_close(programm->state);

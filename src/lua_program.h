@@ -11,6 +11,7 @@ typedef struct
     int _current_call_arg_count;
 } LuaProgram;
 
+
 LuaProgram *programm_init(void);
 
 void programm_deinit(LuaProgram *programm);
@@ -23,6 +24,7 @@ void programm_end_call(LuaProgram *programm);
 
 void programm_do_call(LuaProgram *programm, int return_count);
 
+void program_load_libs(LuaProgram* program);
 #define programm_call_arg(programm, arg)              \
     _Generic(arg,                                     \
              int                                      \

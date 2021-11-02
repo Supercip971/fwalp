@@ -5,6 +5,7 @@ LuaProgram *load_programm(const char *path)
 {
     LuaProgram *programm = programm_init();
 
+    program_load_libs(programm);
     if (luaL_dofile(programm->state, path) != LUA_OK)
     {
         fprintf(stderr, "lua error while loading: %s \n", get_error(programm));
