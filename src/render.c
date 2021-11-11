@@ -53,7 +53,7 @@ void render_fill(FWalpRenderer *self, Color col)
 
     for (size_t i = 0; i < count; i++)
     {
-        self->framebuffer.color[count] = col.raw;
+        self->framebuffer.color[count] = col;
     }
 }
 
@@ -63,7 +63,7 @@ void render_rect(FWalpRenderer *self, Rect part, Color col)
     {
         for (size_t x = 0; x < part.w; x++)
         {
-            self->framebuffer.color[self->framebuffer.width * (part.y + y) + (part.x + x)] = col.raw;
+            self->framebuffer.color[self->framebuffer.width * (part.y + y) + (part.x + x)] = col;
         }
     }
 }
@@ -76,12 +76,12 @@ void render_pixel(FWalpRenderer *self, int x, int y, Color col)
         exit(1);
     }
 
-    self->framebuffer.color[self->framebuffer.width * y + x] = col.raw;
+    self->framebuffer.color[self->framebuffer.width * y + x] = col;
 }
 
 void render_flip(FWalpRenderer *self)
 {
-    SDL_UpdateTexture(self->framebuffer.texture, NULL, self->framebuffer.color, self->framebuffer.width * sizeof(uint32_t));
+    SDL_UpdateTexture(self->framebuffer.texture, NULL, self->framebuffer.color, self->framebuffer.width * sizeof(Color));
     SDL_SetRenderDrawColor(self->renderer, 0, 0, 0, 255);
     SDL_RenderClear(self->renderer);
     SDL_RenderCopy(self->renderer, self->framebuffer.texture, NULL, NULL);

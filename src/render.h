@@ -11,7 +11,7 @@ typedef struct
 {
     int width;
     int height;
-    uint32_t *color;
+    Color *color;
     SDL_Texture *texture;
 
 } FWalpFramebuffer;

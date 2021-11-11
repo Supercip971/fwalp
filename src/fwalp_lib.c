@@ -37,11 +37,12 @@ static int set_color(lua_State *L)
 
     if (lua_gettop(L) != 2) /* at least a [r] g b */
     {
-        last_color = (Color){.r = lua_tointeger(L, 2), .g = lua_tointeger(L, 3), .b = lua_tointeger(L, 4), .a = lua_tointeger(L, 5)};
+        last_color = (Color){.b = lua_tointeger(L, 2), .g = lua_tointeger(L, 3), .r = lua_tointeger(L, 4), .a = lua_tointeger(L, 5)};
     }
     else
     {
-        last_color = (Color){.raw = lua_tointeger(L, 2)};
+
+        last_color.raw = lua_tointeger(L, 2);
     }
     return 0;
 }
@@ -89,11 +90,11 @@ static const struct
     Color col;
 } fwalp_color[] =
     {
-        {"red", (Color){255, 0, 0, 255}},
-        {"blue", (Color){0, 0, 255, 255}},
-        {"green", (Color){9, 255, 0, 255}},
-        {"black", (Color){0, 0, 0, 255}},
-        {"white", (Color){255, 255, 255, 255}},
+        {"red", make_color$(255, 0, 0, 255)},
+        {"blue",  make_color$(0, 0, 255, 255)},
+        {"green", make_color$(0, 255, 0, 255)},
+        {"black", make_color$(0, 0, 0, 255)},
+        {"white", make_color$(255, 255, 255, 255)},
         {NULL, NULL},
 };
 int luaopen_fwalp_color(lua_State *L)
@@ -103,6 +104,7 @@ int luaopen_fwalp_color(lua_State *L)
     {
         lua_pushstring(L, fwalp_color[i].name);
         lua_pushinteger(L, fwalp_color[i].col.raw);
+        printf("color: %s = %x \n", fwalp_color[i].name, fwalp_color[i].col.raw);
         lua_rawset(L, -3);
     }
     return 1;
