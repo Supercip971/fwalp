@@ -2,6 +2,7 @@
 #include "fwalp_lib.h"
 #include "lua_loader.h"
 #include "render.h"
+
 int main(int argc, char **argv)
 {
 
@@ -24,11 +25,13 @@ int main(int argc, char **argv)
     {
         programm_start_call(programm, "update");
         programm_call_arg(programm, time);
-
         programm_do_call(programm, 0);
-
         programm_end_call(programm);
 
+        programm_start_call(programm, "draw");
+        programm_do_call(programm, 0);
+        programm_end_call(programm);
+        
         render_flip(renderer);
         time += 0.1f;
     }
