@@ -23,10 +23,10 @@ $(OUTPUT): $(OFILES)
 	@echo " LD [ $@ ] $<"
 	@$(CC)  -llua -lSDL2 -lX11 -o $@ $^ $(CFLAGS)
 
-$(BUILD_DIR)/%.o: src/%.c 
+$(BUILD_DIR)/%.o: src/%.c
 	@$(MKCWD)
 	@echo " CC [ $@ ] $<"
-	@$(CC) $(CFLAGS) -MMD -MP $< -c -o $@ 
+	@$(CC) $(CFLAGS) -MMD -MP $< -c -o $@
 
 run: $(OUTPUT)
 	@$(OUTPUT) ./samples/hello.lua
@@ -34,8 +34,9 @@ run: $(OUTPUT)
 all: $(OUTPUT)
 
 screen: $(OUTPUT)
-	Xephyr -br -noreset -screen "1024x640" :1&
-	DISPLAY=:1.0 $(OUTPUT) ./samples/hello.lua 
+	Xephyr -br -noreset -screen "1024x640" :1 &
+	sleep 0.5
+	DISPLAY=:1.0 $(OUTPUT) ./samples/hello.lua
 
 clean:
 	@rm -rf build/
