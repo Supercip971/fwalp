@@ -3,8 +3,9 @@ MKCWD=mkdir -p $(@D)
 
 PROJECT_NAME = test
 
-CC ?= gcc
-CFLAGS = -O2 --analyzer -Isrc/ -fsanitize=address -fsanitize=undefined
+CC ?= clang 
+WARNS = -Wall -Werror -Wextra -Wvla
+CFLAGS = -O2 --analyzer -Isrc/ -fsanitize=address -fsanitize=undefined $(WARNS)
 
 BUILD_DIR = build
 
