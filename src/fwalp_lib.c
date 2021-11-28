@@ -64,7 +64,31 @@ static int draw_rec(lua_State *L)
     render_rect(target_renderer, (Rect){x, y, w, h}, last_color);
     return 0;
 }
-static int fill(lua_State *L)
+
+static int screen_width(lua_State *L)
+{
+    if (lua_gettop(L) != 1)
+    {
+        printf("got %i arguments !", lua_gettop(L));
+        return luaL_error(L, "expecting 1 argument for %s ! ", __FUNCTION__);
+    }
+    lua_pushinteger(L, render_width(target_renderer));
+
+    return 1;
+}
+
+static int screen_height(lua_State *L)
+{
+    if (lua_gettop(L) != 1)
+    {
+        printf("got %i arguments !", lua_gettop(L));
+        return luaL_error(L, "expecting 1 argument for %s ! ", __FUNCTION__);
+    }
+    lua_pushinteger(L, render_height(target_renderer));
+    return 1;
+}
+
+static int fill(UNUSED lua_State *L)
 {
     render_fill(target_renderer, last_color);
     return 0;
@@ -74,6 +98,8 @@ static const luaL_Reg fwalp_render[] =
     {
         {"draw_rec", draw_rec},
         {"set_color", set_color},
+        {"screen_width", screen_width},
+        {"screen_height", screen_height},
         {"fill", fill},
         {NULL, NULL},
 };

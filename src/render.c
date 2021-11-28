@@ -1,4 +1,5 @@
 #include "render.h"
+#include "utils.h"
 
 FWalpRenderer *render_init(const FWalpConfig *config)
 {
@@ -51,17 +52,17 @@ void render_fill(FWalpRenderer *self, Color col)
 {
     int count = self->framebuffer.width * self->framebuffer.height;
 
-    for (size_t i = 0; i < count; i++)
+    for (int i = 0; i < count; i++)
     {
-        self->framebuffer.color[count] = col;
+        self->framebuffer.color[i] = col;
     }
 }
 
 void render_rect(FWalpRenderer *self, Rect part, Color col)
 {
-    for (size_t y = 0; y < part.h; y++)
+    for (int y = 0; y < part.h; y++)
     {
-        for (size_t x = 0; x < part.w; x++)
+        for (int x = 0; x < part.w; x++)
         {
             self->framebuffer.color[self->framebuffer.width * (part.y + y) + (part.x + x)] = col;
         }
@@ -89,7 +90,7 @@ void render_flip(FWalpRenderer *self)
     SDL_RenderPresent(self->renderer);
 }
 
-bool render_update(FWalpRenderer *self)
+bool render_update(UNUSED FWalpRenderer *self)
 {
     SDL_Event ev;
     bool should_quit = false;
@@ -105,4 +106,22 @@ bool render_update(FWalpRenderer *self)
         }
     }
     return !should_quit;
+}
+
+
+uint32_t render_width(FWalpRenderer *self)
+{
+    int width;
+    int height;
+    SDL_GetWindowSize(self->sdl_window, &width, &height);
+
+    return width;
+}
+uint32_t render_height(FWalpRenderer *self)
+{
+    int width;
+    int height;
+    SDL_GetWindowSize(self->sdl_window, &width, &height);
+
+    return height;
 }
