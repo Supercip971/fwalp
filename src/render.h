@@ -37,6 +37,10 @@ void render_rect(FWalpRenderer *self, Rect part, Color col);
 void render_pixel(FWalpRenderer *self, int x, int y, Color col);
 
 bool render_update(FWalpRenderer *self);
+
+/* return the ticks in ms */
+float render_ticks(FWalpRenderer *self);
+
 uint32_t render_width(FWalpRenderer *self);
 uint32_t render_height(FWalpRenderer *self);
 #endif

@@ -15,7 +15,12 @@ typedef union
     uint32_t raw;
 } Color;
 
-#define make_color$(rv, gv, bv, av) \
-    (Color){.a = (av), .b = (bv), .g = (gv), .r = (rv)}
+#define make_color$(rv, gv, bv, av)                    \
+    (Color)                                            \
+    {                                                  \
+        {                                              \
+            .a = (av), .b = (bv), .g = (gv), .r = (rv) \
+        }                                              \
+    }
 
 #endif

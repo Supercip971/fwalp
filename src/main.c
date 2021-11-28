@@ -20,20 +20,25 @@ int main(int argc, char **argv)
     FWalpRenderer *renderer = render_init(&conf);
     LuaProgram *programm = load_programm(argv[1]);
     set_program_render_target(renderer);
-    float time = 0.0f;
+    float time = render_ticks(renderer);
+    float delta_time = 0;
     while (render_update(renderer))
     {
+
         programm_start_call(programm, "update");
-        programm_call_arg(programm, time);
+        programm_call_arg(programm, time / 1000.0f);
+        programm_call_arg(programm, delta_time);
         programm_do_call(programm, 0);
         programm_end_call(programm);
 
         programm_start_call(programm, "draw");
         programm_do_call(programm, 0);
         programm_end_call(programm);
-        
+
         render_flip(renderer);
-        time += 0.1f;
+        float new_time = render_ticks(renderer);
+        delta_time = (new_time - time) / 1000.0f;
+        time = new_time;
     }
     unload_programm(programm);
 

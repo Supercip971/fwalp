@@ -108,6 +108,10 @@ bool render_update(UNUSED FWalpRenderer *self)
     return !should_quit;
 }
 
+float render_ticks(__attribute__((unused)) FWalpRenderer *self)
+{
+    return SDL_GetTicks();
+}
 
 uint32_t render_width(FWalpRenderer *self)
 {

@@ -1,7 +1,9 @@
 #include "fwalp_lib.h"
 #include <assert.h>
+#include "utils.h"
 FWalpRenderer *target_renderer;
-Color last_color = (Color){255, 255, 255, 255};
+
+Color last_color = (Color){{255, 255, 255, 255}};
 
 void set_program_render_target(FWalpRenderer *render)
 {
@@ -46,19 +48,19 @@ static int set_color(lua_State *L)
     }
     return 0;
 }
+
 static int draw_rec(lua_State *L)
 {
-    dump_stack(L);
     if (lua_gettop(L) != 5)
     {
         printf("got %i arguments !", lua_gettop(L));
         return luaL_error(L, "expecting 4 argument for %s ! ", __FUNCTION__);
     }
 
-    int x = lua_tointeger(L, 2);
-    int y = lua_tointeger(L, 3);
-    int w = lua_tointeger(L, 4);
-    int h = lua_tointeger(L, 5);
+    int x = lua_tonumber(L, 2);
+    int y = lua_tonumber(L, 3);
+    int w = lua_tonumber(L, 4);
+    int h = lua_tonumber(L, 5);
 
     printf("drawing rec: %i %i %i %i\n", x, y, w, h);
     render_rect(target_renderer, (Rect){x, y, w, h}, last_color);
@@ -114,15 +116,15 @@ static const struct
 {
     const char *name;
     Color col;
-} fwalp_color[] =
-    {
-        {"red", make_color$(255, 0, 0, 255)},
-        {"blue",  make_color$(0, 0, 255, 255)},
-        {"green", make_color$(0, 255, 0, 255)},
-        {"black", make_color$(0, 0, 0, 255)},
-        {"white", make_color$(255, 255, 255, 255)},
-        {NULL, NULL},
+} fwalp_color[] = {
+    {"red", make_color$(255, 0, 0, 255)},
+    {"blue", make_color$(0, 0, 255, 255)},
+    {"green", make_color$(0, 255, 0, 255)},
+    {"black", make_color$(0, 0, 0, 255)},
+    {"white", make_color$(255, 255, 255, 255)},
+    {NULL, (Color){{0}}},
 };
+
 int luaopen_fwalp_color(lua_State *L)
 {
     luaL_newlibtable(L, fwalp_color);
