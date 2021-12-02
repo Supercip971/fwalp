@@ -3,31 +3,32 @@ MKCWD=mkdir -p $(@D)
 
 PROJECT_NAME = test
 
-CC ?= clang 
+CXX ?= g++
 WARNS = -Wall -Werror -Wextra -Wvla
-CFLAGS = -O2 --analyzer -Isrc/ -fsanitize=address -fsanitize=undefined $(WARNS)
+CFLAGS = -std=c++17 -O2 -Isrc/ $(WARNS)
 
 BUILD_DIR = build
 
 # source files
 
-CFILES = $(wildcard src/*.c)
-HFILES = $(wildcard src/*.h)
-DFILES = $(patsubst src/%.c, $(BUILD_DIR)/%.d, $(CFILES))
-OFILES = $(patsubst src/%.c, $(BUILD_DIR)/%.o, $(CFILES))
+CFILES = $(wildcard src/*.cpp) $(wildcard src/*/*.cpp) $(wildcard src/*/*/*.cpp)
+HFILES = $(wildcard src/*.hpp)
+DFILES = $(patsubst src/%.cpp, $(BUILD_DIR)/%.d, $(CFILES))
+OFILES = $(patsubst src/%.cpp, $(BUILD_DIR)/%.o, $(CFILES))
 
 OUTPUT = build/$(PROJECT_NAME).elf
 
 
 $(OUTPUT): $(OFILES)
 	@$(MKCWD)
-	@echo " LD [ $@ ] $<"
-	@$(CC)  -llua -lSDL2 -lX11 -o $@ $^ $(CFLAGS)
+	@echo " LD  [ $@ ] $<"
+	@$(CXX) $(CFLAGS) -lpthread -ldl -llua -lm -lSDL2 -lX11 -o $@ $^
 
-$(BUILD_DIR)/%.o: src/%.c
+
+$(BUILD_DIR)/%.o: src/%.cpp
 	@$(MKCWD)
-	@echo " CC [ $@ ] $<"
-	@$(CC) $(CFLAGS) -MMD -MP $< -c -o $@
+	@echo " CXX [ $@ ] $<"
+	@$(CXX) $(CFLAGS) -MMD -MP $< -c -o $@
 
 run: $(OUTPUT)
 	@$(OUTPUT) ./samples/hello.lua

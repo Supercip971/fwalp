@@ -1,13 +1,16 @@
-#include "fwalp_lib.h"
+#include "fwalp_lib.hpp"
 #include <assert.h>
-#include "utils.h"
-FWalpRenderer *target_renderer;
+#include "backend.hpp"
+#include "lua_program.hpp"
+#include "utils.hpp"
 
-Color last_color = (Color){{255, 255, 255, 255}};
+fwalp::Backend *target_backend;
 
-void set_program_render_target(FWalpRenderer *render)
+fwalp::Color last_color = fwalp::Color(255, 255, 255, 255);
+
+void set_program_backend_target(fwalp::Backend *render)
 {
-    target_renderer = render;
+    target_backend = render;
 }
 void dump_stack(lua_State *L)
 {
@@ -39,11 +42,13 @@ static int set_color(lua_State *L)
 
     if (lua_gettop(L) != 2) /* at least a [r] g b */
     {
-        last_color = (Color){.b = lua_tointeger(L, 2), .g = lua_tointeger(L, 3), .r = lua_tointeger(L, 4), .a = lua_tointeger(L, 5)};
+        last_color.b = lua_tointeger(L, 2);
+        last_color.g = lua_tointeger(L, 3);
+        last_color.r = lua_tointeger(L, 4);
+        last_color.a = lua_tointeger(L, 5);
     }
     else
     {
-
         last_color.raw = lua_tointeger(L, 2);
     }
     return 0;
@@ -63,7 +68,7 @@ static int draw_rec(lua_State *L)
     int h = lua_tonumber(L, 5);
 
     printf("drawing rec: %i %i %i %i\n", x, y, w, h);
-    render_rect(target_renderer, (Rect){x, y, w, h}, last_color);
+    target_backend->rect(fwalp::Rect(x, y, w, h), last_color);
     return 0;
 }
 
@@ -74,7 +79,7 @@ static int screen_width(lua_State *L)
         printf("got %i arguments !", lua_gettop(L));
         return luaL_error(L, "expecting 1 argument for %s ! ", __FUNCTION__);
     }
-    lua_pushinteger(L, render_width(target_renderer));
+    lua_pushinteger(L, target_backend->width());
 
     return 1;
 }
@@ -86,13 +91,13 @@ static int screen_height(lua_State *L)
         printf("got %i arguments !", lua_gettop(L));
         return luaL_error(L, "expecting 1 argument for %s ! ", __FUNCTION__);
     }
-    lua_pushinteger(L, render_height(target_renderer));
+    lua_pushinteger(L, target_backend->height());
     return 1;
 }
 
 static int fill(UNUSED lua_State *L)
 {
-    render_fill(target_renderer, last_color);
+    target_backend->fill(last_color);
     return 0;
 }
 
@@ -115,14 +120,14 @@ int luaopen_fwalp_renderer(lua_State *L)
 static const struct
 {
     const char *name;
-    Color col;
+    fwalp::Color col;
 } fwalp_color[] = {
-    {"red", make_color$(255, 0, 0, 255)},
-    {"blue", make_color$(0, 0, 255, 255)},
-    {"green", make_color$(0, 255, 0, 255)},
-    {"black", make_color$(0, 0, 0, 255)},
-    {"white", make_color$(255, 255, 255, 255)},
-    {NULL, (Color){{0}}},
+    {"red", fwalp::Color(255, 0, 0, 255)},
+    {"blue", fwalp::Color(0, 0, 255, 255)},
+    {"green", fwalp::Color(0, 255, 0, 255)},
+    {"black", fwalp::Color(0, 0, 0, 255)},
+    {"white", fwalp::Color(255, 255, 255, 255)},
+    {NULL, fwalp::Color(0)},
 };
 
 int luaopen_fwalp_color(lua_State *L)
@@ -137,16 +142,17 @@ int luaopen_fwalp_color(lua_State *L)
     }
     return 1;
 }
-static const luaL_Reg fwalp_libs[] =
-    {
-        {"fwalp_renderer", luaopen_fwalp_renderer},
-        {"fwalp_color", luaopen_fwalp_color},
-        {NULL, NULL}};
+static const luaL_Reg fwalp_libs[] = {
+    {"fwalp_renderer", luaopen_fwalp_renderer},
+    {"fwalp_color", luaopen_fwalp_color},
+    {NULL, NULL},
+};
 
-void load_fwalp_lib(LuaProgram *target)
+fwalp::Result fwalp::LuaProgram::load_libs()
 {
     for (int i = 0; fwalp_libs[i].name != NULL; i++)
     {
-        luaL_requiref(target->state, fwalp_libs[i].name, fwalp_libs[i].func, 1);
+        luaL_requiref(_state, fwalp_libs[i].name, fwalp_libs[i].func, 1);
     }
+    return fwalp::Result::success();
 }
