@@ -30,9 +30,9 @@ Result SDLBackend::init(fwalp::Config *config)
 
     SDL_GetWindowSize(_sdl_window, &_width, &_height);
 
-    printf("window size: %x, %x\n", _width, _height);
+    printf("window size: 0x%x, 0x%x\n", _width, _height);
     _texture = SDL_CreateTexture(_renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, _width, _height);
-    _raw_buffer = std::make_unique<Color>(_width * _height);
+    _raw_buffer = std::unique_ptr<Color>(new Color[_width * _height]);
 
     return Result::success();
 }
@@ -84,11 +84,12 @@ Result SDLBackend::fill(fwalp::Color color)
 }
 Result SDLBackend::rect(fwalp::Rect rect, fwalp::Color color)
 {
+    fwalp::Color *r_col = _raw_buffer.get();
     for (int y = 0; y < rect.h; y++)
     {
         for (int x = 0; x < rect.w; x++)
         {
-            _raw_buffer.get()[_width * (rect.y + y) + (rect.x + x)] = color;
+            r_col[_width * (rect.y + y) + (rect.x + x)] = color;
         }
     }
     return Result::success();
