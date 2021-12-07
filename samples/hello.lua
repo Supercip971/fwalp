@@ -9,7 +9,7 @@ rec_width = 16
 rec_height = 16
 dir_x = 1.0
 dir_y = 1.0
-
+t = 0
 function update(time, dt)
     print ("updated: " ..  time .. " fps: " ..1/dt .. " with: " .. dt)
 
@@ -35,14 +35,21 @@ function update(time, dt)
     rec_x = rec_x + (dir_x * dt * 15)
     rec_y = rec_y + (dir_y * dt * 15)
 
+    t = time
     print ("recx: " .. rec_x .. " recy: " .. rec_y)
 
 end
 
 function draw()
+    render:set_color(color.black)
+    render:fill()
     render:set_color(final_res_color)
+    base = render:screen_height() / 2
+    for i = 1, render:screen_width() do
+        res = base + math.sin(i / 10 + t) * 50
+        render:draw_rec(tonumber(i), tonumber(res), 1,1)
+    end
 
-    render:draw_rec((rec_x), rec_y, rec_width, rec_height)
 
 
 end

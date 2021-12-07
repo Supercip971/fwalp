@@ -4,8 +4,8 @@ MKCWD=mkdir -p $(@D)
 PROJECT_NAME = test
 
 CXX ?= g++
-WARNS = -Wall -Werror -Wextra -Wvla
-CFLAGS = -std=c++17 -O2 -Isrc/ $(WARNS)
+WARNS = -Wall -Werror -Wextra -Wvla -fsanitize=undefined -fsanitize=address
+CFLAGS = -std=c++17 -Ofast -march=native -Isrc/ $(WARNS)
 
 BUILD_DIR = build
 
@@ -22,7 +22,7 @@ OUTPUT = build/$(PROJECT_NAME).elf
 $(OUTPUT): $(OFILES)
 	@$(MKCWD)
 	@echo " LD  [ $@ ] $<"
-	@$(CXX) $(CFLAGS) -lpthread -ldl -llua -lm -lSDL2 -lX11 -o $@ $^
+	@$(CXX) $(CFLAGS) -flto -lpthread -ldl -llua -lm -lSDL2 -lX11 -o $@ $^
 
 
 $(BUILD_DIR)/%.o: src/%.cpp
